@@ -5,13 +5,14 @@ module.exports = {
     get: (req, res)=> {
       return new Promise((resolve, reject)=> {
         // const {title='', directed_by=''} = req.query
-        const sql = `SELECT * FROM users`
+        const sql = `SELECT  FROM schedule join movie && cinema on schedule.id_movie=movies.id_movie && cinema `
+        // const sql = `SELECT products.product_name, description, categories.category_name FROM products join categories on products.category_id=categories.category_id ORDER BY price DESC LIMIT ${req.query.limit} OFFSET ${offset}`
         db.query(sql,(err, results)=> {
           if(err) {
             reject({message: "ada error"})
           }
           resolve({
-            message: "get all from users success",
+            message: "get all from schedules success",
             status: 200,
             data: results
           })
@@ -20,9 +21,9 @@ module.exports = {
     },
     getId: (req, res) => { // get done
       return new Promise((resolve, reject) => {
-          const {id} = req.params;
-          console.log(id)
-        const sql = `SELECT * FROM users WHERE id =${id}`;
+          const {id_schedule} = req.params;
+          console.log(id_schedule)
+        const sql = `SELECT * FROM schedules WHERE id_schedule =${id_schedule}`;
         db.query(sql, (err, results) => {
           if (err) {
             console.log(err)
@@ -31,7 +32,7 @@ module.exports = {
             });
           }
           resolve({
-            message: "Get all from users success",
+            message: "Get all from schedules success",
             status: 200,
             data: results,
           });
@@ -41,15 +42,15 @@ module.exports = {
     
     add: (req, res)=> {
       return new Promise((resolve, reject)=> {
-        const {name, email, password, image, role} = req.body
+        const {time, price} = req.body
 
-        db.query(`INSERT INTO users(name, email, password, image, role) VALUES('${name}', '${email}','${password}','${image}','${role}')`,(err, results)=> {
+        db.query(`INSERT INTO schedules(time, price) VALUES('${time}', '${price}'`,(err, results)=> {
           if(err) {
             console.log(err)
             reject({message: "error"})
           }
           resolve({
-            message: "add new users success",
+            message: "add new schedules success",
             status: 200,
             data: {
               id: results.insertId,
@@ -61,23 +62,23 @@ module.exports = {
     },
     update: (req, res) => {
       return new Promise((resolve, reject)=> {
-        const {id} = req.params
-        db.query(`SELECT * FROM users where id=${id}`,(err, results)=> {
+        const {id_schedule} = req.params
+        db.query(`SELECT * FROM schedules where id_schedule=${id_schedule}`,(err, results)=> {
           if(err) {res.send({message: "ada error"})}
       
           const previousData = {
             ...results[0],
             ...req.body
           }
-          const {name, email, password, image, role} = previousData
+          const {time, price} = previousData
       
-          db.query(`UPDATE users SET name='${name}', '${email}','${password}','${image}','${role}'`,(err, results)=> {
+          db.query(`UPDATE schedules SET time='${time}', price='${price}'`,(err, results)=> {
             if(err) {
               console.log(err)
               reject({message: "error"})
             }
             resolve({
-              message: "update users success",
+              message: "update schedules success",
               status: 200,
               data: results
             })
@@ -88,11 +89,11 @@ module.exports = {
     },
     remove:(req, res)=> {
       return new Promise((resolve, reject)=> {
-        const {id} = req.params
-        db.query(`DELETE FROM users where id=${id}`,(err, results)=> {
+        const {id_schedule} = req.params
+        db.query(`DELETE FROM schedules where id_schedule=${id_schedule}`,(err, results)=> {
           if(err) {reject({message: "ada error"})}
           resolve.send({
-            message: "delete users success",
+            message: "delete schedules success",
             status: 200,
             data: results
           })

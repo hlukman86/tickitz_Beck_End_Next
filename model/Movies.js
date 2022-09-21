@@ -46,10 +46,30 @@ module.exports = {
         })
       })
     },
+    getId: (req, res) => { // get done
+      return new Promise((resolve, reject) => {
+          const {id_movie} = req.params;
+          console.log(id_movie)
+        const sql = `SELECT * FROM movies WHERE id_movie =${id_movie}`;
+        db.query(sql, (err, results) => {
+          if (err) {
+            console.log(err)
+            reject({
+              message: "Something wrong",
+            });
+          }
+          resolve({
+            message: "Get all from movies success",
+            status: 200,
+            data: results,
+          });
+        });
+      });
+    },
     update: (req, res) => {
       return new Promise((resolve, reject)=> {
-        const {id} = req.params
-        db.query(`SELECT * FROM movies where id=${id}`,(err, results)=> {
+        const {id_movie} = req.params
+        db.query(`SELECT * FROM movies where id_movie=${id_movie}`,(err, results)=> {
           // console.log(results)
           // console.log(req.file)
           if(err) {res.send({message: "ada error"})}
@@ -94,8 +114,8 @@ module.exports = {
     },
     remove:(req, res)=> {
       return new Promise((resolve, reject)=> {
-        const {id} = req.params
-        db.query(`SELECT image FROM movies WHERE id=${id}`, (err ,resultData) => {
+        const {id_movie} = req.params
+        db.query(`SELECT image FROM movies WHERE id_movie=${id_movie}`, (err ,resultData) => {
           if(err) {
             console.log(err)
           }
